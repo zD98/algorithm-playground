@@ -44,3 +44,45 @@ function process(num, left, mid, right, from, to) {
 }
 let steps = hanoiProblemOne(3, 'left', 'mid', 'right')
 console.log(steps)
+
+const Action = {
+    No: 'No',
+    LToM: 'LToM',
+    MToL: 'MToL',
+    MToR: 'MToR',
+    RToM: 'RToM'
+}
+
+function hanoiProblemTwo(num, left, mid, right) {
+    let lS = [Number.MAX_VALUE]
+    let mS = [Number.MAX_VALUE]
+    let rS = [Number.MAX_VALUE]
+
+    for(let i = num;i>0;i--) {
+        lS.push(i)
+    }
+    let step = 0
+    let record = [Action.No]
+
+    while(rS.length != num + 1) {
+        step += fStackTotStack(record, Action.MToL, Action.LToM, lS, mS, left, mid)
+        step += fStackTotStack(record, Action.LToM, Action.MToL, mS, lS, mid, left)
+        step += fStackTotStack(record, Action.MToR, Action.RToM, rS, mS, right, mid)
+        step += fStackTotStack(record, Action.RToM, Action.MToR, mS, rS, mid, right)
+    }
+    return step
+}
+
+function fStackTotStack(record, inverseAction, nowAction, fS, tS, from, to) {
+    if((record!=inverseAction)&&(fS[fS.length - 1] < tS[tS.length - 1])){
+        tS.push(fS.pop())
+        record[0] = nowAction
+        console.log(`Move ${tS[tS.length - 1]} from ${from} to ${to} `)
+        return 1;
+    }
+
+    return 0
+}
+
+steps = hanoiProblemTwo(3, 'left', 'mid', 'right')
+console.log(steps)
